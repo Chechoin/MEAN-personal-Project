@@ -1,0 +1,31 @@
+version: '3' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  angular: # name of the first service
+    build: client # specify the directory of the Dockerfile
+    ports:
+      - "4200:4200" # specify port forewarding
+    volumes:
+      - ./client:/app # this will enable changes made to the angular app reflect in the container
+
+  express: #name of the second service
+    build: api # specify the directory of the Dockerfile
+    ports:
+      - "3800:3800" #specify ports forewarding
+    volumes:
+      - ./api:/app # this will enable changes made to the angular app reflect in the container
+    links:
+    - database
+  database: # name of the third service
+    image: 'mongo' # specify image to build container from
+    #container_name: 'mean-docker_database_1'
+    #environment: 
+#      - MONGO_INITDB_DATABASE=database-name #Database name you want to make
+#      - MONGO_INITDB_ROOT_USERNAME=Sergio   #CONTAINER ROOT name
+#      - MONGO_INITDB_ROOT_PASSWORD=Password #Container root pass
+    ports:
+      - "27018:27017" # specify port forewarding
+    volumes:
+#      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./db:/data/db
